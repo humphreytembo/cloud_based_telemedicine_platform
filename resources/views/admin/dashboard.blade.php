@@ -326,7 +326,7 @@ body{
         <div class="doctor-left">
 
             @if($doctor->profile_image)
-                <img class="doctor-image" src="{{ asset('storage/'.$doctor->profile_image) }}">
+                <img class="doctor-image" src="{{ asset('storage/' . $doctor->profile_image) }}">
             @else
                 <div class="doctor-avatar">
                     <i class="fa-solid fa-user-doctor"></i>

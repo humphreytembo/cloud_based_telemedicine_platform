@@ -315,11 +315,10 @@ body{
         <p>Cloud Telemedicine Platform</p>
     </div>
     <div class="sidebar-links">
-        <a href="/dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
-        <a href="/appointments"><i class="fa-solid fa-calendar-check"></i> Appointments</a>
-        <a href="/doctors/consult"><i class="fa-solid fa-user-doctor"></i> Doctors</a>
-        <a href="/dr-ai-chat"><i class="fa-solid fa-robot"></i> Dr AI Assistant</a>
-        <a href="/health-learn" class="active"><i class="fa-solid fa-book-open-reader"></i> Health Learning</a>
+        <a href="{{ url('/dashboard') }}"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="{{ url('/appointments') }}"><i class="fa-solid fa-calendar-check"></i> Appointments</a>
+        <a href="{{ url('/dr-ai-chat') }}"><i class="fa-solid fa-robot"></i> Dr AI Assistant</a>
+        <a href="{{ url('/health-learn') }}" class="active"><i class="fa-solid fa-book-open-reader"></i> Health Learning</a>
         <a href="#"><i class="fa-solid fa-user"></i> Profile</a>
     </div>
 </div>
@@ -336,7 +335,7 @@ body{
                 <p>Evidence-based articles, tips, and guides to keep you well.</p>
             </div>
         </div>
-        <a href="/home" style="background:#0ea5e9;color:white;padding:12px 20px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;">
+        <a href="{{ url('/home') }}" style="background:#0ea5e9;color:white;padding:12px 20px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;">
             <i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i>Back to Dashboard
         </a>
     </div>

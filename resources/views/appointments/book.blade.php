@@ -340,7 +340,7 @@ textarea{
             <p>Schedule secure consultations with professional doctors.</p>
         </div>
 
-        <a href="/home" class="back-btn">
+        <a href= "{{ url('/home') }}" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i>
             Back Dashboard
         </a>
@@ -371,7 +371,7 @@ textarea{
                     Available Doctors
                 </h3>
 
-                <form method="POST" action="/appointments/book">
+                <form method="POST" action="{{ url('appointments/book') }}">
                 @csrf
 
                 <input type="hidden" name="doctor_id" id="doctor_id">

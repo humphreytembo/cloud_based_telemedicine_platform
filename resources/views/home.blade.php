@@ -315,27 +315,27 @@ body{
     </div>
 
     <div class="sidebar-links">
-        <a href="#" class="active">
+        <a href="{{ url('patient/dashboard') }}" class="active">
             <i class="fa-solid fa-house"></i>
             Dashboard
         </a>
 
-        <a href="/appointments">
+        <a href="{{ url('appointments') }}">
             <i class="fa-solid fa-calendar-check"></i>
             Appointments
         </a>
 
-        <a href="/doctors/consult">
+        <a href="{{ url('doctors/consult') }}">
             <i class="fa-solid fa-user-doctor"></i>
             Doctors
         </a>
 
-        <a href="/dr-ai-chat">
+        <a href="{{ url('dr-ai-chat') }}">
             <i class="fa-solid fa-robot"></i>
             Dr AI Assistant
         </a>
 
-        <a href="#">
+        <a href="{{ url('patient/profile') }}">
             <i class="fa-solid fa-user"></i>
             Profile
         </a>
@@ -372,71 +372,53 @@ body{
 
     </div>
 
-    <!-- STATS -->
-   
-
     <!-- ACTION CARDS -->
     <div class="cards">
 
         <div class="card">
             <i class="fa-solid fa-calendar-plus"></i>
             <h3>Book Appointment</h3>
+            "{{ url('') }}"
             <p>Schedule appointments with healthcare professionals.</p>
-
-            <a href="/appointments/book">
-                Book Now
-            </a>
+            <a href="{{ url('appointments/book') }}">Book Now</a>
         </div>
 
         <div class="card">
             <i class="fa-solid fa-comments"></i>
             <h3>Consult Doctor</h3>
             <p>Start secure chat or video consultation instantly.</p>
-
-            <a href="/doctors/consult">
-                Start Consultation
-            </a>
+            <a href="{{ url('doctors/consult') }}">Start Consultation</a>
         </div>
 
         <div class="card">
             <i class="fa-solid fa-file-medical"></i>
             <h3>My Appointments</h3>
             <p>Manage and track your appointment history.</p>
-
-            <a href="/appointments">
-                View Appointments
-            </a>
+            <a href="{{ url('appointments') }}">View Appointments</a>
         </div>
 
         <div class="card">
             <i class="fa-solid fa-robot"></i>
             <h3>Ask Dr AI</h3>
             <p>Get AI-powered medical guidance and support.</p>
-
-            <a href="/dr-ai-chat">
-                Ask AI
-            </a>
+            <a href="{{ url('dr-ai-chat') }}">Ask AI</a>
         </div>
 
-        {{-- ✅ ADD THIS CARD inside your existing .cards div on the patient dashboard --}}
-
-<div class="card">
-    <i class="fa-solid fa-book-open-reader"></i>
-    <h3>Health Learning</h3>
-    <p>Articles, expert tips, videos and daily wellness guides curated by our doctors.</p>
-    <a href="/health-learn">Start Learning</a>
-</div>
+        <div class="card">
+            <i class="fa-solid fa-book-open-reader"></i>
+            <h3>Health Learning</h3>
+            <p>Articles, expert tips, videos and daily wellness guides curated by our doctors.</p>
+            <a href="{{ url('health-learn') }}">Start Learning</a>
+        </div>
 
     </div>
 
-    
+</div>
 
 <script>
-
 function toggleMenu() {
     document.getElementById("sidebar").classList.toggle("active");
 }
-
 </script>
 
 </body>

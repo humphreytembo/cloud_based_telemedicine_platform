@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
@@ -18,6 +15,23 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+
+            // Role & approval (from add_role_fields)
+            $table->string('role')->default('patient'); // patient, doctor, admin
+            $table->boolean('is_approved')->default(true);
+            $table->string('doctor_document')->nullable();
+
+            // Status (from add_status)
+            $table->string('status')->default('pending');
+
+            // Doctor fields (from add_doctor_fields)
+            $table->string('profile_image')->nullable();
+            $table->string('specialization')->nullable();
+
+            // Online presence (from add_is_online)
+            $table->boolean('is_online')->default(false);
+            $table->timestamp('last_seen')->nullable();
+
             $table->timestamps();
         });
 
@@ -37,13 +51,10 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

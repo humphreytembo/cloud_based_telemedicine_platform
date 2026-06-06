@@ -319,7 +319,7 @@ body{
     <div class="top-area">
 
         <!-- BACK BUTTON -->
-        <a href="/home" class="back-dashboard-btn">
+        <a href= "{{ url('/home') }}" class="back-dashboard-btn">
             ← Back to Dashboard
         </a>
 
@@ -400,7 +400,7 @@ body{
             <!-- BUTTON -->
             <div class="card-actions">
 
-                <a href="/chat/{{ $doctor->id }}" class="chat-btn">
+                <a href="{{ url('/chat/' . $doctor->id) }}" class="chat-btn">
                     Start Consultation
                 </a>
 

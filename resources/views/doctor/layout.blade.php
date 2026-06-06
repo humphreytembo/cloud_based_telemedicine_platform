@@ -99,7 +99,7 @@
     
    
 
-    <a href="/doctor/messages">
+    <a href= "{{ url('/doctor/messages') }}">
         Messages
         @if(isset($unreadMessages) && $unreadMessages > 0)
             <span style="background:red;color:white;padding:2px 8px;border-radius:50%;font-size:12px;margin-left:10px;">
