@@ -3,531 +3,443 @@
 @section('content')
 
 <style>
-    .dashboard-title {
-        margin-bottom: 20px;
-    }
+    /* ── Page header ── */
+    .page-header { margin-bottom: 24px; }
+    .page-header h1 { font-size: 24px; font-weight: 700; color: #0f172a; }
+    .page-header p  { color: #64748b; margin-top: 4px; font-size: 14px; }
 
-    .dashboard-title h1 {
-        font-size: 28px;
-        color: #0f172a;
-    }
-
-    .dashboard-title p {
-        color: #64748b;
-        margin-top: 5px;
-    }
-
-    .appointment-card {
+    /* ── Appointment card ── */
+    .appt-card {
         background: #fff;
         border-radius: 14px;
         padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        border-left: 6px solid #3b82f6;
-        transition: 0.3s;
+        margin-bottom: 16px;
+        border: 1px solid #e2e8f0;
+        border-left: 5px solid #3b82f6;
+        transition: box-shadow .2s, transform .2s;
+    }
+    .appt-card:hover {
+        box-shadow: 0 6px 20px rgba(0,0,0,.07);
+        transform: translateY(-2px);
     }
 
-    .appointment-card:hover {
-        transform: translateY(-3px);
-    }
-
-    .appointment-top {
+    /* ── Card top row ── */
+    .card-top {
         display: flex;
+        align-items: flex-start;
         justify-content: space-between;
-        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
         flex-wrap: wrap;
-        margin-bottom: 15px;
     }
 
     .patient-name {
-        font-size: 20px;
-        font-weight: 600;
+        font-size: 18px;
+        font-weight: 700;
         color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    .appointment-status {
-        padding: 6px 14px;
+    .patient-avatar {
+        width: 38px; height: 38px;
+        border-radius: 50%;
+        background: #eff6ff;
+        color: #1d4ed8;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 15px; font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    /* ── Status badge ── */
+    .status-badge {
+        padding: 5px 13px;
         border-radius: 20px;
         color: #fff;
-        font-size: 13px;
-        font-weight: 600;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
+    .s-pending    { background: #f59e0b; }
+    .s-approved   { background: #10b981; }
+    .s-rejected   { background: #ef4444; }
+    .s-rescheduled{ background: #3b82f6; }
 
-    .status-pending    { background: #f59e0b; }
-    .status-approved   { background: #10b981; }
-    .status-rejected   { background: #ef4444; }
-    .status-rescheduled{ background: #3b82f6; }
-
-    .appointment-details {
+    /* ── Detail grid ── */
+    .detail-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 15px;
-        margin-bottom: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+        margin-bottom: 18px;
     }
 
     .detail-box {
         background: #f8fafc;
-        padding: 15px;
+        padding: 12px 14px;
         border-radius: 10px;
+        border: 1px solid #f1f5f9;
     }
 
-    .detail-title {
-        font-size: 13px;
-        color: #64748b;
-        margin-bottom: 5px;
-    }
+    .detail-label { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: #94a3b8; margin-bottom: 4px; font-weight: 600; }
+    .detail-val   { font-size: 14px; font-weight: 600; color: #0f172a; }
 
-    .detail-value {
-        font-size: 16px;
-        font-weight: 600;
-        color: #0f172a;
-    }
-
+    /* ── Actions ── */
     .actions {
         display: flex;
-        gap: 10px;
         flex-wrap: wrap;
+        gap: 8px;
     }
 
     .btn {
-        border: none;
-        padding: 10px 18px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 16px;
         border-radius: 8px;
-        color: white;
-        cursor: pointer;
+        border: none;
+        color: #fff;
+        font-size: 13px;
         font-weight: 600;
-        transition: 0.3s;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity .15s, transform .15s;
+        -webkit-tap-highlight-color: transparent;
+        white-space: nowrap;
     }
+    .btn:hover   { opacity: .88; }
+    .btn:active  { transform: scale(.97); }
 
-    .btn:hover {
-        opacity: 0.9;
-        transform: scale(1.02);
-    }
+    .btn-approve   { background: #10b981; }
+    .btn-reject    { background: #ef4444; }
+    .btn-reschedule{ background: #3b82f6; }
+    .btn-view      { background: #6366f1; }
+    .btn-report    { background: #0ea5e9; }
+    .btn-vreport   { background: #8b5cf6; }
+    .btn-done      { background: #94a3b8; cursor: default; }
 
-    .approve        { background: #10b981; }
-    .reject         { background: #ef4444; }
-    .reschedule-btn { background: #3b82f6; }
-    .approved-btn   { background: #10b981; }
-    .rejected-btn   { background: #ef4444; }
-    .view-btn       { background: #6366f1; }
-
+    /* ── Reschedule form ── */
     .reschedule-form {
-        margin-top: 15px;
         display: none;
+        margin-top: 14px;
         background: #f8fafc;
-        padding: 15px;
+        border: 1px solid #e2e8f0;
         border-radius: 10px;
+        padding: 16px;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+    }
+    .reschedule-form.open { display: flex; }
+
+    .reschedule-form label {
+        font-size: 12px; font-weight: 600;
+        color: #64748b; display: block; margin-bottom: 4px;
     }
 
     .reschedule-form input {
-        padding: 10px;
+        padding: 9px 12px;
         border: 1px solid #cbd5e1;
         border-radius: 8px;
-        margin-right: 10px;
-        margin-bottom: 10px;
+        font-size: 14px;
+        color: #0f172a;
+        background: #fff;
+        width: 100%;
     }
 
-    .save-btn { background: #0f172a; }
+    .rform-field { flex: 1; min-width: 140px; }
 
+    .btn-save { background: #0f172a; }
+
+    /* ── Empty state ── */
     .empty-state {
         background: #fff;
-        padding: 40px;
+        padding: 48px 24px;
         text-align: center;
         border-radius: 14px;
+        border: 1px solid #e2e8f0;
         color: #64748b;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
+    .empty-state i  { font-size: 40px; color: #cbd5e1; margin-bottom: 12px; display: block; }
+    .empty-state h2 { font-size: 18px; color: #0f172a; margin-bottom: 6px; }
+    .empty-state p  { font-size: 14px; }
 
+    /* ── MODAL ── */
     .modal-overlay {
         display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(15,23,42,0.6);
+        position: fixed; inset: 0;
+        background: rgba(15,23,42,.65);
         backdrop-filter: blur(4px);
         z-index: 999;
         justify-content: center;
         align-items: center;
+        padding: 16px;
     }
-
     .modal-overlay.active { display: flex; }
 
     .modal {
-        background: white;
-        border-radius: 24px;
-        padding: 40px 36px;
-        width: 420px;
-        max-width: 95vw;
-        text-align: center;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.2);
-        animation: popIn 0.3s ease;
+        background: #fff;
+        border-radius: 20px;
+        padding: 32px 28px;
+        width: 100%;
+        max-width: 440px;
+        max-height: calc(100dvh - 32px);
+        overflow-y: auto;
         position: relative;
+        box-shadow: 0 20px 60px rgba(0,0,0,.2);
+        animation: popIn .25s ease;
     }
 
     @keyframes popIn {
-        from { transform: scale(0.9); opacity: 0; }
+        from { transform: scale(.93); opacity: 0; }
         to   { transform: scale(1);   opacity: 1; }
     }
 
     .modal-close {
         position: absolute;
-        top: 14px;
-        right: 18px;
-        background: none;
+        top: 14px; right: 14px;
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        background: #f1f5f9;
         border: none;
-        font-size: 20px;
+        color: #0f172a;
+        font-size: 16px;
         cursor: pointer;
-        color: #94a3b8;
+        display: flex; align-items: center; justify-content: center;
+        transition: background .15s;
+        -webkit-tap-highlight-color: transparent;
     }
+    .modal-close:hover { background: #e2e8f0; }
 
-    .modal-close:hover { color: #1e293b; }
-
-    .modal-header { margin-bottom: 6px; }
-
-    .modal-header h3 {
-        font-size: 20px;
-        color: #1e293b;
+    .modal-title {
+        font-size: 18px; font-weight: 700; color: #0f172a;
         margin-bottom: 4px;
+        display: flex; align-items: center; gap: 8px;
     }
 
-    .modal-header p {
-        font-size: 13px;
-        color: #64748b;
-    }
+    .modal-subtitle { font-size: 13px; color: #64748b; margin-bottom: 18px; }
 
-    .appt-meta {
+    .modal-meta {
         background: #f8fafc;
-        border-radius: 12px;
-        padding: 14px 18px;
-        margin: 18px 0;
-        text-align: left;
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 18px;
         font-size: 13px;
         color: #475569;
-        line-height: 1.8;
+        line-height: 1.9;
     }
-
-    .appt-meta strong { color: #1e293b; }
+    .modal-meta strong { color: #0f172a; }
 
     .reason-box {
         background: #eff6ff;
         border: 1px solid #bfdbfe;
-        border-radius: 10px;
+        border-radius: 8px;
         padding: 10px 14px;
         margin-top: 10px;
-        text-align: left;
         font-size: 13px;
         color: #1e40af;
         line-height: 1.6;
     }
+    .reason-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #3b82f6; margin-bottom: 4px; display: block; }
 
-    .reason-box .reason-label {
-        font-weight: 700;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #3b82f6;
-        margin-bottom: 4px;
-        display: block;
-    }
-
-    .countdown-label {
-        font-size: 13px;
-        color: #64748b;
-        margin-bottom: 10px;
-        font-weight: 500;
-    }
-
+    .countdown-section { text-align: center; margin-bottom: 18px; }
+    .countdown-label-text { font-size: 12px; color: #64748b; margin-bottom: 6px; font-weight: 500; }
     .countdown-display {
-        font-size: 48px;
-        font-weight: 700;
-        color: #2563eb;
-        letter-spacing: 2px;
-        font-variant-numeric: tabular-nums;
-        margin-bottom: 8px;
+        font-size: 44px; font-weight: 700; color: #2563eb;
+        letter-spacing: 2px; font-variant-numeric: tabular-nums;
+        margin-bottom: 4px;
     }
+    .countdown-display.urgent   { color: #ef4444; animation: blink 1s infinite; }
+    .countdown-display.expired  { color: #94a3b8; font-size: 28px; animation: none; }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.4;} }
 
-    .countdown-display.urgent {
-        color: #ef4444;
-        animation: pulse 1s infinite;
-    }
+    .countdown-sub { font-size: 12px; color: #94a3b8; margin-bottom: 16px; }
 
-    .countdown-display.expired {
-        color: #94a3b8;
-        font-size: 32px;
-        animation: none;
-    }
-
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50%       { opacity: 0.5; }
-    }
-
-    .countdown-sublabel {
-        font-size: 12px;
-        color: #94a3b8;
-        margin-bottom: 24px;
-    }
-
-    /* ✅ btn-start is now an <a> tag — styled to look like a button */
-    .btn-start {
+    .modal-status-badge {
         display: none;
-        width: 100%;
-        padding: 14px;
-        background: linear-gradient(135deg, #16a34a, #15803d);
-        color: white;
-        border-radius: 12px;
-        font-size: 16px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: 0.2s;
-        animation: fadeIn 0.5s ease;
-        text-decoration: none;
+        padding: 10px 14px; border-radius: 10px;
+        font-size: 13px; font-weight: 600; margin-bottom: 12px;
         text-align: center;
     }
+    .modal-status-badge.overdue { background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; }
+    .modal-status-badge.expired { background:#f1f5f9; color:#64748b; border:1px solid #cbd5e1; }
 
-    .btn-start:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(22,163,74,0.35);
-        color: white;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(8px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .status-badge {
+    .btn-start {
         display: none;
-        padding: 10px 16px;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 10px;
-        animation: fadeIn 0.5s ease;
+        width: 100%; padding: 14px;
+        background: #16a34a; color: #fff;
+        border-radius: 12px; border: none;
+        font-size: 15px; font-weight: 700;
+        cursor: pointer; text-decoration: none;
+        text-align: center; transition: opacity .15s, transform .15s;
+        -webkit-tap-highlight-color: transparent;
     }
+    .btn-start:hover { opacity: .9; transform: translateY(-1px); color: #fff; }
 
-    .status-badge.overdue {
-        background: #fff7ed;
-        color: #c2410c;
-        border: 1px solid #fed7aa;
+    /* ── Mobile overrides ── */
+    @media (max-width: 640px) {
+        .card-top { flex-direction: column; align-items: stretch; }
+        .card-top .status-badge { align-self: flex-start; }
+        .actions { flex-direction: column; }
+        .btn { width: 100%; justify-content: center; }
+        .detail-grid { grid-template-columns: 1fr; }
+        .modal { padding: 24px 18px; }
+        .countdown-display { font-size: 36px; }
     }
-
-    .status-badge.expired {
-        background: #f1f5f9;
-        color: #64748b;
-        border: 1px solid #cbd5e1;
-    }
-
-    .waiting-msg {
-        font-size: 13px;
-        color: #94a3b8;
-        margin-top: 6px;
-    }
-
-    @media(max-width: 768px) {
-        .appointment-top {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .actions {
-            flex-direction: column;
-            width: 100%;
-        }
-
-        .btn {
-            width: 100%;
-        }
-
-        .reschedule-form input {
-            width: 100%;
-        }
-    }
-
-    .report-btn      { background: #0ea5e9; }
-    .view-report-btn { background: #8b5cf6; }
 </style>
 
-<div class="dashboard-title">
-    <h1>Doctor Appointments</h1>
+<div class="page-header">
+    <h1><i class="fa-solid fa-calendar-check" style="color:#3b82f6;margin-right:8px;"></i>Appointments</h1>
     <p>Manage patient appointments, approvals and rescheduling.</p>
 </div>
 
 @if($appointments->count() > 0)
 
     @foreach($appointments as $appointment)
+    <div class="appt-card">
 
-        <div class="appointment-card">
-
-            <div class="appointment-top">
-
-                <div class="patient-name">
-                    {{ $appointment->patient->name ?? 'Unknown Patient' }}
+        <div class="card-top">
+            <div class="patient-name">
+                <div class="patient-avatar">
+                    {{ strtoupper(substr($appointment->patient->name ?? 'P', 0, 1)) }}
                 </div>
-
-                <div class="appointment-status
-                    @if($appointment->status == 'approved') status-approved
-                    @elseif($appointment->status == 'rejected') status-rejected
-                    @elseif($appointment->status == 'rescheduled') status-rescheduled
-                    @else status-pending
-                    @endif
-                ">
-                    {{ ucfirst($appointment->status) }}
-                </div>
-
+                {{ $appointment->patient->name ?? 'Unknown Patient' }}
             </div>
-
-            <div class="appointment-details">
-
-                <div class="detail-box">
-                    <div class="detail-title">Description</div>
-                    <div class="detail-value">
-                        {{ $appointment->description ?? $appointment->reason ?? 'No description' }}
-                    </div>
-                </div>
-
-                <div class="detail-box">
-                    <div class="detail-title">Appointment Date</div>
-                    <div class="detail-value">{{ $appointment->appointment_date }}</div>
-                </div>
-
-                <div class="detail-box">
-                    <div class="detail-title">Appointment Time</div>
-                    <div class="detail-value">{{ $appointment->appointment_time }}</div>
-                </div>
-
-            </div>
-
-            <div class="actions">
-
-                @if($appointment->status == 'approved')
-                    <button class="btn approved-btn">Approved</button>
-                @elseif($appointment->status == 'rejected')
-                    <button class="btn rejected-btn">Rejected</button>
-                @else
-                    <form action="{{ route('appointment.approve', $appointment->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn approve">Approve</button>
-                    </form>
-
-                    <form action="{{ route('appointment.reject', $appointment->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn reject">Reject</button>
-                    </form>
-                @endif
-
-                <button class="btn reschedule-btn" onclick="toggleForm({{ $appointment->id }})">
-                    Reschedule
-                </button>
-
-                {{-- ✅ data-chat-url carries the correct patient ID for the chat route --}}
-                <button
-                    class="btn view-btn"
-                    data-chat-url="{{ route('chat.show', $appointment->patient->id) }}"
-                    onclick="openModal(
-                        '{{ $appointment->id }}',
-                        '{{ addslashes($appointment->doctor->name ?? 'N/A') }}',
-                        '{{ addslashes($appointment->patient->name ?? 'Unknown Patient') }}',
-                        '{{ $appointment->appointment_date }} {{ $appointment->appointment_time }}',
-                        '{{ addslashes($appointment->reason ?? $appointment->description ?? 'No reason provided') }}',
-                        this
-                    )">
-                    <i class="fa-solid fa-eye" style="margin-right:6px;"></i>View
-                </button>
-
-                @if($appointment->status == 'approved')
-                    @if($appointment->report)
-                        <a href="{{ route('reports.show', $appointment->report->id) }}" class="btn" style="background:#8b5cf6; text-decoration:none;">
-                            <i class="fa-solid fa-file-medical" style="margin-right:6px;"></i>View Report
-                        </a>
-                    @else
-                        <a href="{{ route('reports.create', $appointment->id) }}" class="btn" style="background:#0ea5e9; text-decoration:none;">
-                            <i class="fa-solid fa-file-pen" style="margin-right:6px;"></i>Write Report
-                        </a>
-                    @endif
-                @endif
-
-            </div>
-
-            <form id="form-{{ $appointment->id }}"
-                  class="reschedule-form"
-                  action="{{ route('appointment.reschedule', $appointment->id) }}"
-                  method="POST">
-                @csrf
-                <input type="date" name="appointment_date" value="{{ $appointment->appointment_date }}" required>
-                <input type="time" name="appointment_time" value="{{ $appointment->appointment_time }}" required>
-                <button type="submit" class="btn save-btn">Save Changes</button>
-            </form>
-
+            <span class="status-badge
+                @if($appointment->status == 'approved') s-approved
+                @elseif($appointment->status == 'rejected') s-rejected
+                @elseif($appointment->status == 'rescheduled') s-rescheduled
+                @else s-pending @endif
+            ">{{ ucfirst($appointment->status) }}</span>
         </div>
 
+        <div class="detail-grid">
+            <div class="detail-box">
+                <div class="detail-label"><i class="fa-solid fa-file-lines" style="margin-right:4px;"></i>Description</div>
+                <div class="detail-val">{{ $appointment->description ?? $appointment->reason ?? 'No description' }}</div>
+            </div>
+            <div class="detail-box">
+                <div class="detail-label"><i class="fa-regular fa-calendar" style="margin-right:4px;"></i>Date</div>
+                <div class="detail-val">{{ $appointment->appointment_date }}</div>
+            </div>
+            <div class="detail-box">
+                <div class="detail-label"><i class="fa-regular fa-clock" style="margin-right:4px;"></i>Time</div>
+                <div class="detail-val">{{ $appointment->appointment_time }}</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            @if($appointment->status == 'approved')
+                <button class="btn btn-done" disabled>
+                    <i class="fa-solid fa-circle-check"></i> Approved
+                </button>
+            @elseif($appointment->status == 'rejected')
+                <button class="btn btn-done" disabled>
+                    <i class="fa-solid fa-circle-xmark"></i> Rejected
+                </button>
+            @else
+                <form action="{{ route('appointment.approve', $appointment->id) }}" method="POST" style="display:contents;">
+                    @csrf
+                    <button type="submit" class="btn btn-approve">
+                        <i class="fa-solid fa-check"></i> Approve
+                    </button>
+                </form>
+                <form action="{{ route('appointment.reject', $appointment->id) }}" method="POST" style="display:contents;">
+                    @csrf
+                    <button type="submit" class="btn btn-reject">
+                        <i class="fa-solid fa-xmark"></i> Reject
+                    </button>
+                </form>
+            @endif
+
+            <button class="btn btn-reschedule" onclick="toggleForm({{ $appointment->id }})">
+                <i class="fa-regular fa-calendar-days"></i> Reschedule
+            </button>
+
+            <button class="btn btn-view"
+                data-chat-url="{{ route('chat.show', $appointment->patient->id) }}"
+                onclick="openModal(
+                    '{{ $appointment->id }}',
+                    '{{ addslashes($appointment->doctor->name ?? 'N/A') }}',
+                    '{{ addslashes($appointment->patient->name ?? 'Unknown Patient') }}',
+                    '{{ $appointment->appointment_date }} {{ $appointment->appointment_time }}',
+                    '{{ addslashes($appointment->reason ?? $appointment->description ?? 'No reason provided') }}',
+                    this
+                )">
+                <i class="fa-solid fa-eye"></i> View
+            </button>
+
+            @if($appointment->status == 'approved')
+                @if($appointment->report)
+                    <a href="{{ route('reports.show', $appointment->report->id) }}" class="btn btn-vreport">
+                        <i class="fa-solid fa-file-medical"></i> View Report
+                    </a>
+                @else
+                    <a href="{{ route('reports.create', $appointment->id) }}" class="btn btn-report">
+                        <i class="fa-solid fa-file-pen"></i> Write Report
+                    </a>
+                @endif
+            @endif
+        </div>
+
+        <form id="form-{{ $appointment->id }}"
+              class="reschedule-form"
+              action="{{ route('appointment.reschedule', $appointment->id) }}"
+              method="POST">
+            @csrf
+            <div class="rform-field">
+                <label>New Date</label>
+                <input type="date" name="appointment_date" value="{{ $appointment->appointment_date }}" required>
+            </div>
+            <div class="rform-field">
+                <label>New Time</label>
+                <input type="time" name="appointment_time" value="{{ $appointment->appointment_time }}" required>
+            </div>
+            <button type="submit" class="btn btn-save">
+                <i class="fa-solid fa-floppy-disk"></i> Save
+            </button>
+        </form>
+
+    </div>
     @endforeach
 
 @else
-
     <div class="empty-state">
+        <i class="fa-regular fa-calendar-xmark"></i>
         <h2>No Appointments Yet</h2>
         <p>Patient appointments will appear here once booked.</p>
     </div>
-
 @endif
 
 
-{{-- ── MODAL HTML ── --}}
+<!-- ── MODAL ── -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-       
 
-        <button class="modal-close" onclick="closeModal()">
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">
             <i class="fa-solid fa-xmark"></i>
         </button>
 
-        <div class="modal-header">
-            <h3><i class="fa-solid fa-stethoscope" style="color:#2563eb;margin-right:8px;"></i>Appointment Details</h3>
-            <p>Session information</p>
+        <div class="modal-title">
+            <i class="fa-solid fa-stethoscope" style="color:#2563eb;font-size:18px;"></i>
+            Appointment Details
+        </div>
+        <div class="modal-subtitle">Session information</div>
+
+        <div class="modal-meta" id="modalMeta"></div>
+
+        <div class="countdown-section">
+            <div class="countdown-label-text">Time until appointment</div>
+            <div class="countdown-display" id="countdownDisplay">--:--:--</div>
+            <div class="countdown-sub" id="countdownSub">Calculating...</div>
         </div>
 
-        <div class="appt-meta" id="modalMeta"></div>
+        <div class="modal-status-badge" id="statusBadge"></div>
 
-        <div class="countdown-label">Time until appointment</div>
-        <div class="countdown-display" id="countdownDisplay">--:--:--</div>
-        <div class="countdown-sublabel" id="countdownSublabel">Calculating...</div>
-
-        <div class="status-badge" id="statusBadge"></div>
-
-        {{-- ✅ Now an <a> tag — href set dynamically in openModal() --}}
         <a class="btn-start" id="btnStart" href="#">
-            <i class="fa-solid fa-video" style="margin-right:8px;"></i>Click to Start Session
+            <i class="fa-solid fa-video" style="margin-right:8px;"></i>Start Session
         </a>
-       
-
-  
-
-<style>
-    .modal-close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: none;
-    background: #f1f5f9;
-    color: #0f172a;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    transition: 0.3s;
-}
-
-
-
-</style>
-
-        <p class="waiting-msg" id="waitingMsg"></p>
 
     </div>
 </div>
@@ -535,146 +447,93 @@
 
 <script>
 function toggleForm(id) {
-    let form = document.getElementById('form-' + id);
-    form.style.display = (form.style.display === 'block') ? 'none' : 'block';
+    const f = document.getElementById('form-' + id);
+    f.classList.toggle('open');
 }
 
 let countdownInterval = null;
 
-// ✅ Receives btnEl (this) instead of storing IDs in JS variables
 function openModal(id, doctorName, patientName, isoTime, reason, btnEl) {
-
-    // Grab the chat URL from the button's data attribute and set it on the link
     document.getElementById('btnStart').href = btnEl.dataset.chatUrl;
-
     isoTime = isoTime.replace(' ', 'T');
-
+    const initials = patientName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
     document.getElementById('modalMeta').innerHTML = `
         <div><strong>Doctor:</strong> Dr. ${doctorName}</div>
         <div><strong>Patient:</strong> ${patientName}</div>
         <div><strong>Scheduled:</strong> ${formatDateTime(isoTime)}</div>
         <div class="reason-box">
-            <span class="reason-label"><i class="fa-solid fa-notes-medical" style="margin-right:4px;"></i>Reason for Appointment</span>
+            <span class="reason-label"><i class="fa-solid fa-notes-medical" style="margin-right:4px;"></i>Reason</span>
             ${reason}
-        </div>
-    `;
-
+        </div>`;
     document.getElementById('modalOverlay').classList.add('active');
     startCountdown(isoTime);
 }
 
 function closeModal() {
     document.getElementById('modalOverlay').classList.remove('active');
-
     if (countdownInterval) clearInterval(countdownInterval);
-
-    const display = document.getElementById('countdownDisplay');
-    display.textContent = '--:--:--';
-    display.className   = 'countdown-display';
-
-    document.getElementById('countdownSublabel').textContent = 'Calculating...';
-    document.getElementById('btnStart').style.display        = 'none';
-    document.getElementById('btnStart').href                 = '#'; // ✅ reset on close
-    document.getElementById('waitingMsg').textContent        = '';
-
+    const disp = document.getElementById('countdownDisplay');
+    disp.textContent = '--:--:--';
+    disp.className   = 'countdown-display';
+    document.getElementById('countdownSub').textContent   = 'Calculating...';
+    document.getElementById('btnStart').style.display     = 'none';
+    document.getElementById('btnStart').href              = '#';
     const badge = document.getElementById('statusBadge');
     badge.style.display = 'none';
-    badge.className     = 'status-badge';
+    badge.className     = 'modal-status-badge';
     badge.textContent   = '';
 }
 
 function startCountdown(isoTime) {
-
     if (countdownInterval) clearInterval(countdownInterval);
-
-    const appointmentTime = new Date(isoTime).getTime();
-
+    const apptTime = new Date(isoTime).getTime();
     function tick() {
-
         const now  = Date.now();
-        const diff = appointmentTime - now;
-
-        const display    = document.getElementById('countdownDisplay');
-        const sublabel   = document.getElementById('countdownSublabel');
-        const btnStart   = document.getElementById('btnStart');
-        const waitingMsg = document.getElementById('waitingMsg');
-        const badge      = document.getElementById('statusBadge');
-
+        const diff = apptTime - now;
+        const disp    = document.getElementById('countdownDisplay');
+        const sub     = document.getElementById('countdownSub');
+        const btn     = document.getElementById('btnStart');
+        const badge   = document.getElementById('statusBadge');
         if (diff <= 0) {
-
             clearInterval(countdownInterval);
-
-            const overdueMs      = Math.abs(diff);
-            const overdueMinutes = Math.floor(overdueMs / (1000 * 60));
-            const overdueDays    = Math.floor(overdueMs / (1000 * 60 * 60 * 24));
-
-            if (overdueDays >= 1) {
-                display.textContent     = 'EXPIRED';
-                display.className       = 'countdown-display expired';
-                sublabel.textContent    = `Appointment was ${overdueDays} day(s) ago`;
-                badge.innerHTML         = '<i class="fa-solid fa-ban" style="margin-right:6px;"></i>Session Expired — This appointment can no longer be started';
-                badge.className         = 'status-badge expired';
-                badge.style.display     = 'block';
-                btnStart.style.display  = 'none';
-                waitingMsg.textContent  = '';
-
-            } else if (overdueMinutes > 30) {
-                display.textContent     = 'OVERDUE';
-                display.className       = 'countdown-display urgent';
-                sublabel.textContent    = `${overdueMinutes} minutes past appointment time`;
-                badge.innerHTML         = '<i class="fa-solid fa-triangle-exclamation" style="margin-right:6px;"></i>Session Overdue — Please reschedule';
-                badge.className         = 'status-badge overdue';
-                badge.style.display     = 'block';
-                btnStart.style.display  = 'none';
-                waitingMsg.textContent  = '';
-
+            const overMin  = Math.floor(Math.abs(diff) / 60000);
+            const overDays = Math.floor(Math.abs(diff) / 86400000);
+            if (overDays >= 1) {
+                disp.textContent = 'EXPIRED'; disp.className = 'countdown-display expired';
+                sub.textContent  = `${overDays} day(s) ago`;
+                badge.innerHTML  = '<i class="fa-solid fa-ban" style="margin-right:6px;"></i>Session expired — cannot be started';
+                badge.className  = 'modal-status-badge expired'; badge.style.display = 'block';
+                btn.style.display = 'none';
+            } else if (overMin > 30) {
+                disp.textContent = 'OVERDUE'; disp.className = 'countdown-display urgent';
+                sub.textContent  = `${overMin} minutes past appointment time`;
+                badge.innerHTML  = '<i class="fa-solid fa-triangle-exclamation" style="margin-right:6px;"></i>Session overdue — please reschedule';
+                badge.className  = 'modal-status-badge overdue'; badge.style.display = 'block';
+                btn.style.display = 'none';
             } else {
-                display.textContent     = '00:00:00';
-                display.className       = 'countdown-display urgent';
-                sublabel.textContent    = "It's time for the appointment!";
-                badge.style.display     = 'none';
-                btnStart.style.display  = 'block';
-                waitingMsg.textContent  = '';
+                disp.textContent = '00:00:00'; disp.className = 'countdown-display urgent';
+                sub.textContent  = "It's time for the appointment!";
+                badge.style.display = 'none'; btn.style.display = 'block';
             }
-
             return;
         }
-
-        const hours   = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-        display.textContent =
-            String(hours).padStart(2, '0') + ':' +
-            String(minutes).padStart(2, '0') + ':' +
-            String(seconds).padStart(2, '0');
-
-        badge.style.display    = 'none';
-        btnStart.style.display = 'none';
-
-        if (diff < 5 * 60 * 1000) {
-            display.className    = 'countdown-display urgent';
-            sublabel.textContent = 'Almost time — get ready!';
-        } else if (diff < 60 * 60 * 1000) {
-            display.className    = 'countdown-display';
-            sublabel.textContent = 'Less than an hour to go';
-        } else {
-            display.className    = 'countdown-display';
-            sublabel.textContent = 'Hours : Minutes : Seconds';
-        }
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        disp.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        badge.style.display = 'none'; btn.style.display = 'none';
+        if (diff < 300000)     { disp.className = 'countdown-display urgent'; sub.textContent = 'Almost time — get ready!'; }
+        else if (diff < 3600000){ disp.className = 'countdown-display'; sub.textContent = 'Less than an hour to go'; }
+        else                    { disp.className = 'countdown-display'; sub.textContent = 'Hours : Minutes : Seconds'; }
     }
-
     tick();
     countdownInterval = setInterval(tick, 1000);
 }
 
-function formatDateTime(isoString) {
-    const d = new Date(isoString);
-    return d.toLocaleDateString('en-GB', {
-        day: '2-digit', month: 'short', year: 'numeric'
-    }) + ' at ' + d.toLocaleTimeString('en-GB', {
-        hour: '2-digit', minute: '2-digit'
-    });
+function formatDateTime(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'})
+         + ' at ' + d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
 }
 
 document.getElementById('modalOverlay').addEventListener('click', function(e) {

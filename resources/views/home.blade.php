@@ -378,7 +378,7 @@ body{
         <div class="card">
             <i class="fa-solid fa-calendar-plus"></i>
             <h3>Book Appointment</h3>
-            "{{ url('') }}"
+           
             <p>Schedule appointments with healthcare professionals.</p>
             <a href="{{ url('appointments/book') }}">Book Now</a>
         </div>
